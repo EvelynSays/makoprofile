@@ -1,238 +1,170 @@
 <!DOCTYPE html>
-<html lang="en"
-      data-bs-theme="dark">
-
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mako Ferren</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
-        .npc-box {
+        .npc-box, .family-box {
             border-radius: 0.5rem;
-            padding: 1rem;
+            padding: 0.75rem;
             color: #fff;
-            min-height: 150px;
-        }
-
-        .npc-good {
-            background-color: #1e3d1e;
-        }
-
-        .npc-bad {
-            background-color: #3d1e1e;
-        }
-
-        .npc-neutral {
-            background-color: #3d3d1e;
-        }
-
-        .family-box {
-            border-radius: 0.5rem;
-            padding: 1rem;
-            color: #fff;
-            min-height: 150px;
             background-color: #1e2a3d;
+        }
+        .npc-good { background-color: #1e3d1e; }
+        .npc-bad { background-color: #3d1e1e; }
+        .npc-neutral { background-color: #3d3d1e; }
+        .name-good { color: #4ec9b0; font-weight: 600; }
+        .name-neutral { color: #ffd700; font-weight: 600; }
+        .name-bad { color: #f44747; font-weight: 600; }
+        .name-family { color: #ff69b4; font-weight: 600; }
+        .name-place { color: #9370db; font-weight: 600; }
+        .portrait-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .portrait-container img {
+            width: 200px;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
         }
     </style>
 </head>
-
 <body>
-    <div class="container py-5">
-        <h1 class="mb-4">Mako Ferren: Half-Orc Soulknife Rogue</h1>
-
+    <div class="container py-3">
+        <div class="portrait-container">
+            <img src="Mako Human.jpg" alt="Human Portrait">
+            <img src="https://placehold.co/200x300" alt="Half-Orc Portrait">
+        </div>
         <div class="row g-4">
             <div class="col-md-6">
                 <h2 class="h5 mb-3">Backstory</h2>
-                <div class="accordion"
-                     id="backstoryAccordion">
+                <div class="accordion" id="backstoryAccordion">
                     <div class="accordion-item">
-                        <h2 class="accordion-header"
-                            id="heading0to7">
-                            <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapse0to7"
-                                    aria-expanded="false"
-                                    aria-controls="collapse0to7">
+                        <h2 class="accordion-header" id="heading0to7">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse0to7" aria-expanded="false" aria-controls="collapse0to7">
                                 Ages 0–7
                             </button>
                         </h2>
-                        <div id="collapse0to7"
-                             class="accordion-collapse collapse"
-                             aria-labelledby="heading0to7"
-                             data-bs-parent="#backstoryAccordion">
+                        <div id="collapse0to7" class="accordion-collapse collapse" aria-labelledby="heading0to7" data-bs-parent="#backstoryAccordion">
                             <div class="accordion-body">
-                                Mako grew up carefree. Living in the woods with her human mother, Kinna. She didn’t know
-                                a lot about her father - only that he was an Orc named Cidrak, and that she had his
-                                eyes. Most of her days were spent playing in the garden and nearby wood, making enemies
-                                in her imagination and slaying them heroically with sticks that she felt looked exactly
-                                like daggers.
-                                <br><br>
-                                Her mother was a herbalist who spent most of her days cultivating her garden, brewing
-                                simple potions and occasionally travelling to the nearby town to trade. She was kind and
-                                patient, and the only time there was any sharpness to her voice was when she told Mako
-                                to make sure the townspeople never saw her, and exactly where to hide in the pantry so
-                                she couldn''t be seen by a passing gaze. Mako wasn't entirely sure why, but the way her
-                                mother said it easily convinced her that it was important.
-                                <br><br>
-                                Their quiet, comfortable life was shattered one Autumn evening when Mako was seven years
-                                old. Earlier that day, a man had approached the house in a run and Mako had noticed him
-                                too late. She thought she had been quick enough when she spotted him and ran from the
-                                garden to her space behind her mother's stacked baskets in the pantry. The man had been
-                                in a panic and asked her mother to bring supplies to help heal one of the townsfolk who
-                                had suddenly fallen ill. She could recall clearly now the memory of her mother entering
-                                the pantry, picking up several items - a bundle of herbs, several flasks and something
-                                wrapped in cloth - before leaning in to kiss Mako on the forehead, pausing for a moment,
-                                smiling and leaving for the town.
-                                <br><br>
-                                A few nights later, her mother had returned home and prepared an evening meal. As they
-                                ate, they were abruptly interrupted by the door to their small home crashing inwards as
-                                several armed men of the Moon Guard spilled in through the open doorway. Kinna reached
-                                for her daughter but was grabbed by several of the men held Mako still. These men took
-                                her mother' life before her, ignoring the pleas from the woman and child. Mako had
-                                watched the fear in her mother's eyes and felt entirely helpless.
-                                <br><br>
-                                Once her mother lay still on the floor, after looking to a man in nicer armor than the
-                                rest and asking "Omet, the child?" The man who held her began pulling her outside. The
-                                men spoke further, but she could not hear them through her screams. Mako punched and
-                                kicked at his legs as she was pulled, and when her fear reached its peak, she felt
-                                something manifest in her hand and as she swung down, pierced the man's thigh with an
-                                unseen blade. The second she bought herself was enough, and she ran into the woods until
-                                her lungs burned, and her legs could no longer carry her.
+                                <p>Mako grew up carefree. Living in a farming village named <span class="name-place">Klovir</span> with her human mother, <span class="name-family">Kinna</span>. She didn't know a lot about her father - only that he was an Orc named <span class="name-family">Cidrak</span>, and that she had his eyes. Most of her days were spent playing in the garden and nearby wood, making enemies in her imagination and slaying them heroically with sticks that she felt looked exactly like daggers - sometimes sneaking off to play with <span class="name-neutral">Rebef</span> and his young sister <span class="name-neutral">Selna</span>, the children of a nearby farmer.</p>
+                                <p>Her mother was a herbalist who spent most of her days cultivating her garden, brewing simple potions and occasionally traveling to the nearby town to trade. She was kind and patient, and the only time there was any sharpness to her voice was when she told Mako to make sure the townspeople never saw her, and exactly where to hide in the pantry so she couldn't be seen by a passing gaze. Mako wasn't entirely sure why, but the way her mother said it easily convinced her that it was important.</p>
+                                <p>Their quiet, comfortable life was shattered one Autumn evening when Mako was seven years old. Earlier that day, a man had approached the house in a run and Mako had noticed him too late. She thought she had been quick enough when she spotted him and ran from the garden to her space behind her mother's stacked baskets in the pantry. The man had been in a panic and asked her mother to bring supplies to help heal one of the townsfolk who had suddenly fallen ill. She could recall clearly now the memory of her mother entering the pantry, picking up several items - a bundle of herbs, several flasks and something wrapped in cloth - before leaning in to kiss Mako on the forehead, pausing for a moment, smiling and leaving for the town.</p>
+                                <p>A few nights later, her mother had returned home and prepared an evening meal. As they ate, they were abruptly interrupted by the door to their small home crashing inwards as several armed men of the <span class="name-bad">Moon Guard</span> spilled in through the open doorway. <span class="name-family">Kinna</span> reached for her daughter but was grabbed by several of the men who held Mako still. These men took her mother's life before her, ignoring the pleas from the woman and child. Mako had watched the fear in her mother's eyes and felt entirely helpless.</p>
+                                <p>Once her mother lay still on the floor, after looking to a man in nicer armor than the rest and asking "<span class="name-bad">Omet</span>, the child?" the man who held her began pulling her outside. The men spoke further, but she could not hear them through her screams. Mako punched and kicked at his legs as she was pulled, and when her fear reached its peak, she felt something manifest in her hand and as she swung down, pierced the man's thigh with an unseen blade. The second she bought herself was enough, and she ran into the woods until her lungs burned, and her legs could no longer carry her.</p>
                             </div>
                         </div>
                     </div>
-
                     <div class="accordion-item">
-                        <h2 class="accordion-header"
-                            id="heading7to12">
-                            <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapse7to12"
-                                    aria-expanded="false"
-                                    aria-controls="collapse7to12">
+                        <h2 class="accordion-header" id="heading7to12">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7to12" aria-expanded="false" aria-controls="collapse7to12">
                                 Ages 7–12
                             </button>
                         </h2>
-                        <div id="collapse7to12"
-                             class="accordion-collapse collapse"
-                             aria-labelledby="heading7to12"
-                             data-bs-parent="#backstoryAccordion">
+                        <div id="collapse7to12" class="accordion-collapse collapse" aria-labelledby="heading7to12" data-bs-parent="#backstoryAccordion">
                             <div class="accordion-body">
-                                For a few months, she barely survived in the nearby wood. Hungry and exhausted, she saw
-                                a fire through the trees and in her desperation walked towards it. There she found a
-                                small community of lesser who lived a short while from her village, who didn't hesitate
-                                to feed and warm her. She lived within this community for several years, finding a home
-                                with a halfling woman named Hillie, who also functioned as a face for the village when
-                                any people outside the community visited, making sure to keep any Orc in the community
-                                hidden.
-                                <br><br>
-                                There were several children of similar age here, and Mako slowly started the healing
-                                from her loss and built a close friendship with a young Orc called Gom. The two
-                                playfully fought each other, and Mako relished her their friendship.
-                                <br><br>
-                                On Occasion, a human man named Theron would visit the camp. He seemed to like the
-                                lesser, and Mako would interrogate him every time he visited, eventually learning that
-                                he worked in Wamriec and was often on the road. He began showing her tricks with his
-                                daggers, and the two formed a small bond - the Half-Orc girl would often ask him to take
-                                her with him, and he always refused. Theron was a kind man. He was sympathetic to the
-                                lesser and didn't have issue with her pale green skin or the tusks jutting from her
-                                lower lip.
-                                <br><br>
-                                One afternoon, when Mako was twelve years old, she waited for Theron to leave his cart
-                                unattended, grabbed her small pack of belongings, left notes for Hallie and Gom, and
-                                climbed into the back of his cart, finding a hidden place between some crates covered by
-                                a thick tarp. By the time Theron noticed her presence, it was too late to turn around.
-                                When they arrived at Wamriec, he took her under his wing, inducting her into the White
-                                Ink.
+                                <p>For a few months, she barely survived in the nearby wood. Hungry and exhausted, she saw a fire through the trees and in her desperation walked towards it. There she found a small community of lesser called <span class="name-place">Myrk</span> who was a short while from <span class="name-place">Klovir</span>, who didn't hesitate to feed and warm her. She lived within this community for several years, finding a home with a halfling woman named <span class="name-good">Hillie</span>, who also functioned as a face for the village when any people outside the community visited, making sure to keep any Orc in the community hidden.</p>
+                                <p>There were several children of similar age here, and Mako slowly started the healing from her loss and built a close friendship with a young Orc called <span class="name-good">Gom</span>. The two playfully fought each other, and Mako relished their friendship.</p>
+                                <p>On Occasion, a human man named <span class="name-good">Theron</span> would visit the camp. He seemed to like the lesser, and Mako would interrogate him every time he visited, eventually learning that he worked in <span class="name-place">Wamriec</span> and was often on the road. He began showing her tricks with his daggers, and the two formed a small bond - the Half-Orc girl would often ask him to take her with him, and he always refused. <span class="name-good">Theron</span> was a kind man. He was sympathetic to the lesser and didn't have issue with her pale green skin or the tusks jutting from her lower lip.</p>
+                                <p>One afternoon, when Mako was twelve years old, she waited for <span class="name-good">Theron</span> to leave his cart unattended, grabbed her small pack of belongings, left notes for <span class="name-good">Hallie</span> and <span class="name-good">Gom</span>, and climbed into the back of his cart, finding a hidden place between some crates covered by a thick tarp. By the time <span class="name-good">Theron</span> noticed her presence, it was too late to turn around. When they arrived at <span class="name-place">Wamriec</span>, he took her under his wing, inducting her into the <span class="name-place">White Ink</span>.</p>
                             </div>
                         </div>
                     </div>
                     <div class="accordion-item">
-                        <h2 class="accordion-header"
-                            id="heading12to18">
-                            <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapse12to18"
-                                    aria-expanded="false"
-                                    aria-controls="collapse12to18">
+                        <h2 class="accordion-header" id="heading12to18">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse12to18" aria-expanded="false" aria-controls="collapse12to18">
                                 Ages 12–18
                             </button>
                         </h2>
-                        <div id="collapse12to18"
-                             class="accordion-collapse collapse"
-                             aria-labelledby="heading12to18"
-                             data-bs-parent="#backstoryAccordion">
+                        <div id="collapse12to18" class="accordion-collapse collapse" aria-labelledby="heading12to18" data-bs-parent="#backstoryAccordion">
                             <div class="accordion-body">
-                                Following the shift in the White Ink after the appearence of the moonblight, and with
-                                their shift towards increasing tension between the Mahldor and Cindaval borders to
-                                increase the efficiency of their drug smuggling, it became clear to Mako that the White
-                                Ink wasn't what it first appeared to be. The more she learned about it, the less she
-                                liked it. Along with this, Theron had started to visit lesser villages less and less,
-                                and eventually stopped entirely. They often argued about this, Mako insisting that he
-                                should still help, but Theron stood his ground and refused, insisting it was no longer
-                                safe.
-                                <br><br>
-                                When Mako was eighteen years old and she was in Port Haelik working with Theron, they
-                                had their largest argument yet. In her anger, she left and never turned back, finding
-                                her way onto a ship to Mahldor, where she made her way to Kazwen where she worked,
-                                frequently travelling to nearby towns for work while trying to find any leads on her
-                                father - but mostly just trying to get by.
+                                <p>Following the shift in the <span class="name-place">White Ink</span> after the appearance of the moonblight, and with their shift towards increasing tension between the <span class="name-place">Mahldor</span> and <span class="name-place">Cindaval</span> borders to increase the efficiency of their drug smuggling, it became clear to Mako that the <span class="name-place">White Ink</span> wasn't what it first appeared to be. The more she learned about it, the less she liked it. Along with this, <span class="name-good">Theron</span> had started to visit lesser villages less and less, and eventually stopped entirely. They often argued about this, Mako insisting that he should still help, but <span class="name-good">Theron</span> stood his ground and refused, insisting it was no longer safe.</p>
+                                <p>When Mako was eighteen years old and she was in <span class="name-place">Port Haelik</span> working with <span class="name-good">Theron</span>, they had their largest argument yet. In her anger, she left and never turned back, finding her way onto a ship to <span class="name-place">Mahldor</span>, where she made her way to <span class="name-place">Kazwen</span> where she worked, frequently travelling to nearby towns for work while trying to find any leads on her father – but mostly just trying to get by.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6">
-                <h2 class="h5 mb-3">NPC Connections</h2>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="npc-box npc-good">
-                            <h5>Hillie</h5>
-                            <p>Halfling member of the lesser community that took Mako in when she needed a home.</p>
+                <h2 class="h5 mb-3">Connections</h2>
+                <div class="accordion" id="connectionsAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingNPC">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNPC" aria-expanded="false" aria-controls="collapseNPC">
+                                NPC Connections
+                            </button>
+                        </h2>
+                        <div id="collapseNPC" class="accordion-collapse collapse" aria-labelledby="headingNPC" data-bs-parent="#connectionsAccordion">
+                            <div class="accordion-body">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <div class="npc-box npc-good">
+                                            <h5>Hillie</h5>
+                                            <p>Halfling member of the lesser community that took Mako in when she needed a home.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="npc-box npc-good">
+                                            <h5>Gom</h5>
+                                            <p>Mako's Orc best friend from the lesser community.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="npc-box npc-good">
+                                            <h5>Theron</h5>
+                                            <p>Mako's mentor in the White Ink, though their relationship is currently strained.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="npc-box npc-bad">
+                                            <h5>Omet</h5>
+                                            <p>A member of the Moon Guard who was the highest ranking officer present when her mother was killed.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="npc-box npc-neutral">
+                                            <h5>Rebef</h5>
+                                            <p>Human male - a farmer boy from Klovir.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="npc-box npc-neutral">
+                                            <h5>Selna</h5>
+                                            <p>Human sister to Rebef</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="npc-box npc-good">
-                            <h5>Gom</h5>
-                            <p>Mako's Orc best friend from the lesser community.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="npc-box npc-good">
-                            <h5>Theron</h5>
-                            <p>Mako's mentor in the White Ink, though their relationship is currently strained.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="npc-box npc-bad">
-                            <h5>Omet</h5>
-                            <p>A member of the Moon Guard who was the highest ranking officer present when her mother
-                                was killed.</p>
-                        </div>
-                    </div>
-                </div>
-
-
-                <h2 class="h5 mt-4 mb-3">Family</h2>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="family-box">
-                            <h5>Kinna (Human)</h5>
-                            <p>Mako's Mother (deceased)</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="family-box">
-                            <h5>Cidrak (Orc)</h5>
-                            <p>Mako's Father - details unknown.</p>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFamily">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFamily" aria-expanded="false" aria-controls="collapseFamily">
+                                Family
+                            </button>
+                        </h2>
+                        <div id="collapseFamily" class="accordion-collapse collapse" aria-labelledby="headingFamily" data-bs-parent="#connectionsAccordion">
+                            <div class="accordion-body">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <div class="family-box">
+                                            <h5>Kinna (Human)</h5>
+                                            <p>Mako's Mother (deceased)</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="family-box">
+                                            <h5>Cidrak (Orc)</h5>
+                                            <p>Mako's Father - details unknown.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,7 +172,84 @@
         </div>
     </div>
 
+    <hr class="my-5">
+    <h2 class="h5 mb-3 text-center">Journal of Thoughts</h2>
+
+    <div class="row justify-content-center mb-3">
+    <div class="col-md-6">
+        <form id="thoughtForm" class="d-flex flex-column gap-2">
+        <input type="text" id="personName" class="form-control" placeholder="Name (e.g., Violet)" required>
+        <input type="text" id="personThought" class="form-control" placeholder="Thought (e.g., Sings well)" required>
+        <button type="submit" class="btn btn-primary">Add Thought</button>
+        </form>
+    </div>
+    </div>
+
+    <div class="row justify-content-center">
+    <div class="col-md-8">
+        <div id="thoughtList" class="p-3 border rounded bg-dark text-light"></div>
+    </div>
+    </div>
+
+    <script>
+    const thoughts = {};
+
+    function renderThoughts() {
+        const container = document.getElementById('thoughtList');
+        container.innerHTML = '';
+
+        for (const [name, entries] of Object.entries(thoughts)) {
+        const personDiv = document.createElement('div');
+        personDiv.classList.add('mb-4');
+
+        const nameHeader = document.createElement('h5');
+        nameHeader.textContent = name;
+        nameHeader.classList.add('text-info');
+        personDiv.appendChild(nameHeader);
+
+        entries.forEach((entry, index) => {
+            const entryDiv = document.createElement('div');
+            entryDiv.classList.add('d-flex', 'justify-content-between', 'align-items-start', 'bg-secondary', 'p-2', 'rounded', 'mb-2');
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = entry;
+            entryDiv.appendChild(textSpan);
+
+            const delBtn = document.createElement('button');
+            delBtn.classList.add('btn', 'btn-sm', 'btn-danger');
+            delBtn.textContent = '×';
+            delBtn.onclick = () => {
+            thoughts[name].splice(index, 1);
+            if (thoughts[name].length === 0) delete thoughts[name];
+            renderThoughts();
+            };
+            entryDiv.appendChild(delBtn);
+
+            personDiv.appendChild(entryDiv);
+        });
+
+        container.appendChild(personDiv);
+        }
+    }
+
+    document.getElementById('thoughtForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('personName').value.trim();
+        const thought = document.getElementById('personThought').value.trim();
+
+        if (!name || !thought) return;
+
+        if (!thoughts[name]) thoughts[name] = [];
+        thoughts[name].push(thought);
+
+        document.getElementById('personName').value = '';
+        document.getElementById('personThought').value = '';
+
+        renderThoughts();
+    });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
