@@ -287,7 +287,7 @@ async function saveKnowledge() {
 }
 
 // Store category collapse elements for easy reference
-let categoryElements = {}; // {categoryName: {button, collapseDiv}}
+let categoryElements = {};
 
 // Render left column with collapsible categories
 function renderKnowledge() {
@@ -326,12 +326,11 @@ function renderKnowledge() {
         collapseDiv.id = collapseId;
 
         const ul = document.createElement('ul');
-        ul.classList.add('list-group', 'ms-3'); // slightly indented
-        ul.style.maxWidth = '90%'; // narrower than category button
-        ul.style.marginLeft = 'auto'; // right align
+        ul.classList.add('list-group', 'ms-3');
+        ul.style.maxWidth = '90%';
+        ul.style.marginLeft = 'auto';
         ul.style.marginRight = '0';
 
-        // Sort entries alphabetically
         categoriesMap[cat].sort((a, b) => a.name.localeCompare(b.name)).forEach(entry => {
             const li = document.createElement('li');
             li.classList.add('list-group-item');
@@ -362,12 +361,10 @@ function showEntryDetails(entryId) {
     const entry = knowledge[entryId];
     if (!entry) return;
 
-    editingEntryId = null; // reset editing mode
+    editingEntryId = null;
 
     // Collapse all categories first
-    Object.values(categoryElements).forEach(({ collapseDiv }) => {
-        collapseDiv.classList.remove('show');
-    });
+    Object.values(categoryElements).forEach(({ collapseDiv }) => collapseDiv.classList.remove('show'));
 
     // Expand the category of this entry
     const catElem = categoryElements[entry.category];
@@ -390,7 +387,6 @@ function showEntryDetails(entryId) {
         </div>
     `;
 
-    // Edit entry
     document.getElementById('editEntryBtn').onclick = () => {
         editingEntryId = entryId;
         document.getElementById('entryName').value = entry.name;
@@ -398,8 +394,11 @@ function showEntryDetails(entryId) {
         document.getElementById('entryBody').value = entry.body;
     };
 
-    // Delete entry
     document.getElementById('deleteEntryBtn').onclick = async () => {
+        // Remove this entry from other entries' connections
+        Object.values(knowledge).forEach(e => {
+            if (e.connections) e.connections = e.connections.filter(c => c !== entryId);
+        });
         delete knowledge[entryId];
         details.textContent = "Select an entry to view details.";
         renderKnowledge();
@@ -409,40 +408,34 @@ function showEntryDetails(entryId) {
     renderConnections(entryId);
 }
 
-// Render connections for the current entry
+// Render connections for the current entry with drag-and-drop reordering
 function renderConnections(entryId) {
     const entry = knowledge[entryId];
     const connectionsList = document.getElementById('connectionsList');
-    const addSelect = document.getElementById('addConnectionSelect');
-
     connectionsList.innerHTML = '';
-    addSelect.innerHTML = '<option value="">Select entry to connect</option>';
-
-    // Populate dropdown for adding new connections
-    Object.entries(knowledge).forEach(([id, e]) => {
-        if (id === entryId) return;
-        const option = document.createElement('option');
-        option.value = id;
-        option.textContent = e.name;
-        addSelect.appendChild(option);
-    });
 
     entry.connections = entry.connections || [];
-    entry.connections.forEach(connId => {
+
+    entry.connections.forEach((connId, index) => {
+        const connEntry = knowledge[connId];
+        if (!connEntry) return;
+
         const li = document.createElement('li');
         li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        li.draggable = true;
+        li.dataset.index = index;
 
         const linkSpan = document.createElement('span');
-        linkSpan.textContent = knowledge[connId]?.name || "Unknown";
+        linkSpan.textContent = `${connEntry.name} (${connEntry.category})`;
         linkSpan.style.cursor = "pointer";
-        linkSpan.style.textDecoration = "underline";
-        linkSpan.onclick = () => showEntryDetails(connId); // navigate to connected entry
+        linkSpan.onclick = () => showEntryDetails(connId);
 
         const removeBtn = document.createElement('button');
         removeBtn.classList.add('btn', 'btn-sm', 'btn-danger');
         removeBtn.textContent = '×';
         removeBtn.onclick = async () => {
             entry.connections = entry.connections.filter(c => c !== connId);
+            if (connEntry.connections) connEntry.connections = connEntry.connections.filter(c => c !== entryId);
             renderConnections(entryId);
             await saveKnowledge();
         };
@@ -452,18 +445,32 @@ function renderConnections(entryId) {
         connectionsList.appendChild(li);
     });
 
-    // Add new connection
-    document.getElementById('addConnectionBtn').onclick = async () => {
-        const selectedId = addSelect.value;
-        if (!selectedId) return;
+    // Set up drag-and-drop on the list itself
+    let dragSrcIndex = null;
 
-        if (!entry.connections.includes(selectedId)) {
-            entry.connections.push(selectedId);
-            await saveKnowledge();
+    connectionsList.querySelectorAll('li').forEach(li => {
+        li.addEventListener('dragstart', e => {
+            dragSrcIndex = parseInt(li.dataset.index);
+            li.classList.add('dragging');
+        });
+        li.addEventListener('dragend', () => {
+            dragSrcIndex = null;
+            li.classList.remove('dragging');
+        });
+        li.addEventListener('dragover', e => e.preventDefault());
+        li.addEventListener('drop', async e => {
+            e.preventDefault();
+            const dropIndex = parseInt(li.dataset.index);
+            if (dragSrcIndex === null || dragSrcIndex === dropIndex) return;
+
+            // Move element in connections array
+            const moved = entry.connections.splice(dragSrcIndex, 1)[0];
+            entry.connections.splice(dropIndex, 0, moved);
+
             renderConnections(entryId);
-        }
-        addSelect.value = "";
-    };
+            await saveKnowledge();
+        });
+    });
 }
 
 // Handle add/edit form submission
@@ -478,16 +485,13 @@ if (entryForm) {
         if (!name || !category || !body) return;
 
         if (editingEntryId) {
-            // Update existing entry
             knowledge[editingEntryId] = { ...knowledge[editingEntryId], name, category, body };
             editingEntryId = null;
         } else {
-            // Add new entry
             const id = Date.now();
             knowledge[id] = { name, category, body, connections: [] };
         }
 
-        // Clear form
         document.getElementById('entryName').value = '';
         document.getElementById('entryCategory').value = '';
         document.getElementById('entryBody').value = '';
