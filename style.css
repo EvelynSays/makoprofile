@@ -54,3 +54,13 @@ body {
 .person-box h5 {
     margin-bottom: 0.5rem;
 }
+
+.connection-link {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.connection-link:hover {
+    text-decoration: underline;
+}

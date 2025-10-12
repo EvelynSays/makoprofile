@@ -250,11 +250,11 @@ if (noteForm) {
 // ------------------------
 // Knowledgebase Section
 // ------------------------
-const kbBinId = BIN_IDS.knowledge; // use existing BIN_IDS key
+const kbBinId = BIN_IDS.knowledge;
 let knowledge = {};
 let editingEntryId = null;
 
-// Fetch knowledge from JSONBin
+// Fetch knowledge
 async function fetchKnowledge() {
     if (!kbBinId) return;
     try {
@@ -269,16 +269,13 @@ async function fetchKnowledge() {
     }
 }
 
-// Save knowledge to JSONBin
+// Save knowledge
 async function saveKnowledge() {
     if (!kbBinId) return;
     try {
         await fetch(`https://api.jsonbin.io/v3/b/${kbBinId}`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Master-Key": API_KEY
-            },
+            headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
             body: JSON.stringify({ knowledge })
         });
     } catch (err) {
@@ -286,31 +283,35 @@ async function saveKnowledge() {
     }
 }
 
-// Store category collapse elements for easy reference
-let categoryElements = {};
+// Navigate to connection
+function navigateToConnection(connId) {
+    const conn = knowledge[connId];
+    if (!conn) return;
+    const categoryButton = Array.from(document.querySelectorAll('#entryList .btn'))
+        .find(btn => btn.textContent === conn.category);
+    if (!categoryButton) return;
+    const collapseId = categoryButton.getAttribute('data-bs-target').substring(1);
+    showEntryDetails(connId, collapseId);
+}
 
-// Render left column with collapsible categories
+// Render categories and entries
 function renderKnowledge() {
     const listContainer = document.getElementById('entryList');
     const details = document.getElementById('entryDetails');
     if (!listContainer || !details) return;
 
     listContainer.innerHTML = '';
-    categoryElements = {};
 
-    // Group entries by category
     const categoriesMap = {};
     Object.entries(knowledge).forEach(([id, entry]) => {
         if (!categoriesMap[entry.category]) categoriesMap[entry.category] = [];
         categoriesMap[entry.category].push({ ...entry, id });
     });
 
-    // Sort categories alphabetically
     const sortedCategories = Object.keys(categoriesMap).sort();
 
     sortedCategories.forEach((cat, idx) => {
         const collapseId = `catCollapse${idx}`;
-
         const catDiv = document.createElement('div');
         catDiv.classList.add('mb-2');
 
@@ -319,26 +320,22 @@ function renderKnowledge() {
         header.setAttribute('data-bs-toggle', 'collapse');
         header.setAttribute('data-bs-target', `#${collapseId}`);
         header.setAttribute('aria-expanded', 'false');
-        header.innerHTML = `${cat} <span class="float-end">&#9660;</span>`; // dropdown arrow
+        header.textContent = cat;
 
         const collapseDiv = document.createElement('div');
         collapseDiv.classList.add('collapse', 'mt-1');
         collapseDiv.id = collapseId;
 
         const ul = document.createElement('ul');
-        ul.classList.add('list-group', 'ms-3');
-        ul.style.maxWidth = '90%';
-        ul.style.marginLeft = 'auto';
-        ul.style.marginRight = '0';
+        ul.classList.add('list-group');
 
         categoriesMap[cat].sort((a, b) => a.name.localeCompare(b.name)).forEach(entry => {
             const li = document.createElement('li');
-            li.classList.add('list-group-item');
+            li.classList.add('list-group-item', 'text-end');
+            li.style.width = '90%';
             li.style.cursor = 'pointer';
             li.textContent = entry.name;
-
-            li.onclick = () => showEntryDetails(entry.id);
-
+            li.onclick = () => showEntryDetails(entry.id, collapseId);
             ul.appendChild(li);
         });
 
@@ -346,8 +343,6 @@ function renderKnowledge() {
         catDiv.appendChild(header);
         catDiv.appendChild(collapseDiv);
         listContainer.appendChild(catDiv);
-
-        categoryElements[cat] = { button: header, collapseDiv };
     });
 
     if (Object.keys(knowledge).length === 0) {
@@ -355,38 +350,59 @@ function renderKnowledge() {
     }
 }
 
-// Show entry details with Edit/Delete buttons and connections
-function showEntryDetails(entryId) {
+// Show entry details with connections and delete
+function showEntryDetails(entryId, openCategoryId = null) {
     const details = document.getElementById('entryDetails');
     const entry = knowledge[entryId];
     if (!entry) return;
 
+    // Collapse other categories
+    document.querySelectorAll('#entryList .collapse').forEach(c => {
+        if (c.id !== openCategoryId) bootstrap.Collapse.getOrCreateInstance(c).hide();
+    });
+
+    // Open this category
+    if (openCategoryId) {
+        const collapseEl = document.getElementById(openCategoryId);
+        bootstrap.Collapse.getOrCreateInstance(collapseEl).show();
+    }
+
     editingEntryId = null;
 
-    // Collapse all categories first
-    Object.values(categoryElements).forEach(({ collapseDiv }) => collapseDiv.classList.remove('show'));
+    const formattedBody = `<div class="p-2 border rounded mb-3" style="white-space: pre-wrap; background-color: #1e1e1e;">${entry.body}</div>`;
 
-    // Expand the category of this entry
-    const catElem = categoryElements[entry.category];
-    if (catElem) catElem.collapseDiv.classList.add('show');
+    // Build connections display with delete buttons
+    let connectionsHTML = '';
+    if (entry.connections && entry.connections.length) {
+        connectionsHTML = '<h6>Connections:</h6><ul class="list-group">';
+        entry.connections.forEach(connId => {
+            const conn = knowledge[connId];
+            if (!conn) return;
+            connectionsHTML += `
+            <li class="list-group-item d-flex justify-content-between align-items-center" style="cursor: default;">
+                <span class="connection-link" onclick="navigateToConnection('${connId}')">
+                    ${conn.name} (${conn.category})
+                </span>
+                <button class="btn btn-sm btn-danger" onclick="removeConnection('${entryId}', '${connId}')">×</button>
+            </li>`;
+
+        });
+        connectionsHTML += '</ul>';
+    }
 
     details.innerHTML = `
         <h5>${entry.name}</h5>
         <small>Category: ${entry.category}</small>
-        <p>${entry.body}</p>
+        ${formattedBody}
         <div class="mt-3">
             <button id="editEntryBtn" class="btn btn-warning btn-sm me-2">Edit</button>
-            <button id="deleteEntryBtn" class="btn btn-danger btn-sm">Delete</button>
+            <button id="deleteEntryBtn" class="btn btn-danger btn-sm me-2">Delete</button>
+            <button id="addConnBtn" class="btn btn-secondary btn-sm">Add Connection</button>
         </div>
-        <hr>
-        <h6>Connections</h6>
-        <ul id="connectionsList" class="list-group mb-2"></ul>
-        <div class="d-flex gap-2">
-            <select id="addConnectionSelect" class="form-select"></select>
-            <button id="addConnectionBtn" class="btn btn-sm btn-primary">Add Connection</button>
-        </div>
+        <div class="mt-3" id="connectionsList">${connectionsHTML}</div>
     `;
 
+    // Edit entry
     document.getElementById('editEntryBtn').onclick = () => {
         editingEntryId = entryId;
         document.getElementById('entryName').value = entry.name;
@@ -394,102 +410,60 @@ function showEntryDetails(entryId) {
         document.getElementById('entryBody').value = entry.body;
     };
 
+    // Delete entry
     document.getElementById('deleteEntryBtn').onclick = async () => {
-        // Remove this entry from other entries' connections
-        Object.values(knowledge).forEach(e => {
-            if (e.connections) e.connections = e.connections.filter(c => c !== entryId);
-        });
         delete knowledge[entryId];
         details.textContent = "Select an entry to view details.";
         renderKnowledge();
         await saveKnowledge();
     };
 
-    renderConnections(entryId);
-}
-
-// Render connections for the current entry with drag-and-drop reordering
-function renderConnections(entryId) {
-    const entry = knowledge[entryId];
-    const connectionsList = document.getElementById('connectionsList');
-    const addSelect = document.getElementById('addConnectionSelect');
-
-    connectionsList.innerHTML = '';
-    addSelect.innerHTML = '<option value="">Select entry to connect</option>';
-
-    Object.entries(knowledge).forEach(([id, e]) => {
-        if (id === entryId) return;
-        const option = document.createElement('option');
-        option.value = id;
-        option.textContent = `${e.name} (${e.category})`;
-        addSelect.appendChild(option);
-    });
-
-    entry.connections = entry.connections || [];
-    entry.connections.forEach((connId, index) => {
-        const connEntry = knowledge[connId];
-        if (!connEntry) return;
-
-        const li = document.createElement('li');
-        li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-        li.draggable = true;
-        li.dataset.index = index;
-
-        const linkSpan = document.createElement('span');
-        linkSpan.textContent = `${connEntry.name} (${connEntry.category})`;
-        linkSpan.style.cursor = "pointer";
-        linkSpan.style.textDecoration = "underline";
-        linkSpan.onclick = () => showEntryDetails(connId);
-
-        const removeBtn = document.createElement('button');
-        removeBtn.classList.add('btn', 'btn-sm', 'btn-danger');
-        removeBtn.textContent = '×';
-        removeBtn.onclick = async () => {
-            entry.connections = entry.connections.filter(c => c !== connId);
-            if (connEntry.connections) connEntry.connections = connEntry.connections.filter(c => c !== entryId);
-            renderConnections(entryId);
+    // Delete individual connection
+    document.querySelectorAll('#connectionsList button').forEach((btn, i) => {
+        btn.onclick = async () => {
+            const connId = entry.connections[i];
+            // Remove both directions
+            entry.connections = entry.connections.filter(id => id !== connId);
+            if (knowledge[connId]?.connections) {
+                knowledge[connId].connections = knowledge[connId].connections.filter(id => id !== entryId);
+            }
+            showEntryDetails(entryId, openCategoryId);
             await saveKnowledge();
         };
-
-        li.appendChild(linkSpan);
-        li.appendChild(removeBtn);
-        connectionsList.appendChild(li);
-
-        // Drag events
-        li.addEventListener('dragstart', e => {
-            e.dataTransfer.setData('text/plain', index);
-            li.classList.add('dragging');
-        });
-        li.addEventListener('dragend', () => {
-            li.classList.remove('dragging');
-        });
-        li.addEventListener('dragover', e => e.preventDefault());
-        li.addEventListener('drop', async e => {
-            e.preventDefault();
-            const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
-            const toIndex = parseInt(li.dataset.index);
-            if (fromIndex === toIndex) return;
-
-            // Reorder connections array
-            const moved = entry.connections.splice(fromIndex, 1)[0];
-            entry.connections.splice(toIndex, 0, moved);
-            renderConnections(entryId);
-            await saveKnowledge();
-        });
     });
 
-    document.getElementById('addConnectionBtn').onclick = async () => {
-        const selectedId = addSelect.value;
-        if (!selectedId) return;
+    // Add connection dropdown
+    document.getElementById('addConnBtn').onclick = () => {
+        const detailsDiv = document.getElementById('entryDetails');
+        const existing = document.getElementById('connSelectDiv');
+        if (existing) existing.remove();
 
-        const target = knowledge[selectedId];
-        if (!entry.connections.includes(selectedId)) entry.connections.push(selectedId);
-        if (!target.connections) target.connections = [];
-        if (!target.connections.includes(entryId)) target.connections.push(entryId); // bidirectional
+        const dropdownHTML = `
+            <div id="connSelectDiv" class="mt-2 d-flex gap-2">
+                <select id="connSelect" class="form-select form-select-sm">
+                    <option value="">-- Select Entry --</option>
+                    ${Object.entries(knowledge)
+                        .filter(([id]) => id !== entryId)
+                        .map(([id, e]) => `<option value="${id}">${e.name} (${e.category})</option>`).join('')}
+                </select>
+                <button id="connAddBtn" class="btn btn-primary btn-sm">Add</button>
+            </div>`;
+        detailsDiv.insertAdjacentHTML('beforeend', dropdownHTML);
 
-        await saveKnowledge();
-        renderConnections(entryId);
-        addSelect.value = '';
+        document.getElementById('connAddBtn').onclick = async () => {
+            const selectedId = document.getElementById('connSelect').value;
+            if (!selectedId) return;
+            if (!entry.connections) entry.connections = [];
+            if (!knowledge[selectedId].connections) knowledge[selectedId].connections = [];
+
+            if (!entry.connections.includes(selectedId)) entry.connections.push(selectedId);
+            if (!knowledge[selectedId].connections.includes(entryId)) knowledge[selectedId].connections.push(entryId);
+
+            document.getElementById('connSelectDiv').remove();
+            renderKnowledge();
+            showEntryDetails(entryId, openCategoryId);
+            await saveKnowledge();
+        };
     };
 }
 
@@ -498,7 +472,6 @@ const entryForm = document.getElementById('entryForm');
 if (entryForm) {
     entryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const name = document.getElementById('entryName').value.trim();
         const category = document.getElementById('entryCategory').value.trim();
         const body = document.getElementById('entryBody').value.trim();
