@@ -412,10 +412,20 @@ function showEntryDetails(entryId) {
 function renderConnections(entryId) {
     const entry = knowledge[entryId];
     const connectionsList = document.getElementById('connectionsList');
+    const addSelect = document.getElementById('addConnectionSelect');
+
     connectionsList.innerHTML = '';
+    addSelect.innerHTML = '<option value="">Select entry to connect</option>';
+
+    Object.entries(knowledge).forEach(([id, e]) => {
+        if (id === entryId) return;
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = `${e.name} (${e.category})`;
+        addSelect.appendChild(option);
+    });
 
     entry.connections = entry.connections || [];
-
     entry.connections.forEach((connId, index) => {
         const connEntry = knowledge[connId];
         if (!connEntry) return;
@@ -428,6 +438,7 @@ function renderConnections(entryId) {
         const linkSpan = document.createElement('span');
         linkSpan.textContent = `${connEntry.name} (${connEntry.category})`;
         linkSpan.style.cursor = "pointer";
+        linkSpan.style.textDecoration = "underline";
         linkSpan.onclick = () => showEntryDetails(connId);
 
         const removeBtn = document.createElement('button');
@@ -443,34 +454,43 @@ function renderConnections(entryId) {
         li.appendChild(linkSpan);
         li.appendChild(removeBtn);
         connectionsList.appendChild(li);
-    });
 
-    // Set up drag-and-drop on the list itself
-    let dragSrcIndex = null;
-
-    connectionsList.querySelectorAll('li').forEach(li => {
+        // Drag events
         li.addEventListener('dragstart', e => {
-            dragSrcIndex = parseInt(li.dataset.index);
+            e.dataTransfer.setData('text/plain', index);
             li.classList.add('dragging');
         });
         li.addEventListener('dragend', () => {
-            dragSrcIndex = null;
             li.classList.remove('dragging');
         });
         li.addEventListener('dragover', e => e.preventDefault());
         li.addEventListener('drop', async e => {
             e.preventDefault();
-            const dropIndex = parseInt(li.dataset.index);
-            if (dragSrcIndex === null || dragSrcIndex === dropIndex) return;
+            const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+            const toIndex = parseInt(li.dataset.index);
+            if (fromIndex === toIndex) return;
 
-            // Move element in connections array
-            const moved = entry.connections.splice(dragSrcIndex, 1)[0];
-            entry.connections.splice(dropIndex, 0, moved);
-
+            // Reorder connections array
+            const moved = entry.connections.splice(fromIndex, 1)[0];
+            entry.connections.splice(toIndex, 0, moved);
             renderConnections(entryId);
             await saveKnowledge();
         });
     });
+
+    document.getElementById('addConnectionBtn').onclick = async () => {
+        const selectedId = addSelect.value;
+        if (!selectedId) return;
+
+        const target = knowledge[selectedId];
+        if (!entry.connections.includes(selectedId)) entry.connections.push(selectedId);
+        if (!target.connections) target.connections = [];
+        if (!target.connections.includes(entryId)) target.connections.push(entryId); // bidirectional
+
+        await saveKnowledge();
+        renderConnections(entryId);
+        addSelect.value = '';
+    };
 }
 
 // Handle add/edit form submission
