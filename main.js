@@ -493,5 +493,12 @@ if (entryForm) {
         await saveKnowledge();
     });
 
+    document.getElementById('expandAllBtn').onclick = () => {
+      document.querySelectorAll('#entryList .collapse').forEach(collapseEl => {
+      bootstrap.Collapse.getOrCreateInstance(collapseEl).show();
+    });
+};
+
+
     fetchKnowledge();
 }
