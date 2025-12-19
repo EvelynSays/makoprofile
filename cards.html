@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mako Ferren - Kingdom</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">Mako Ferren</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="thoughts.html">Thoughts</a></li>
+          <li class="nav-item"><a class="nav-link" href="notes.html">Notes</a></li>
+          <li class="nav-item"><a class="nav-link" href="knowledgebase.html">Knowledgebase</a></li>
+          <li class="nav-item"><a class="nav-link active" href="cards.html">Kingdom</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <h1 class="text-center mb-4">👑 Kingdom 👑</h1>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <h5 class="mb-3">🃏 Draw History</h5>
+        <div id="drawHistory" class="p-3 border rounded bg-dark" style="height: 500px; overflow-y: auto;">
+          <p class="text-muted text-center">Game will start here...</p>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <h5 class="mb-3">🎲 Current Dice Pools</h5>
+        <div id="diceTableContainer" class="table-responsive d-none">
+          <table class="table table-dark table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Faction</th>
+                <th>d4</th>
+                <th>d6</th>
+                <th>d12</th>
+                <th>d20</th>
+                <th>Total Dice</th>
+              </tr>
+            </thead>
+            <tbody id="diceTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div id="setupForm" class="card bg-secondary p-4">
+          <h5 class="card-title">Game Setup</h5>
+          <form id="gameSetupForm">
+            <div class="mb-3">
+              <label class="form-label">Player Names (2-4 players, separated by commas)</label>
+              <input type="text" id="playerNames" class="form-control" placeholder="Mako, Kinna"required>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg">Start Game</button>
+          </form>
+        </div>
+
+        <div id="gameControls" class="text-center mt-4 d-none">
+            <button id="nextRoundBtn" class="btn btn-danger btn-lg px-5 mt-3">Next Round ➜</button>
+            <button id="finalRollBtn" class="btn btn-danger btn-lg px-5 mt-3 d-none">Roll Final Dice!</button>
+            <button id="resetGameBtn" class="btn btn-warning btn-lg px-5 mt-3">Reset Game 🔄</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5 border-secondary">
+
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <h2 class="h4 text-center mb-4">📜 Kingdom: Game Rules</h2>
+        <div class="accordion" id="kingdomRulesAccordion">
+          
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#rulesOverview" aria-expanded="true">
+                <strong>Overview</strong>
+              </button>
+            </h2>
+            <div id="rulesOverview" class="accordion-collapse collapse show" data-bs-parent="#kingdomRulesAccordion">
+              <div class="accordion-body">
+                <p><strong>Kingdom</strong> is a dice-building card game for 2-4 players using a standard 52 card deck (no jokers).</p>
+                <p>Each player is assigned one of the four suits as their <strong>faction</strong> (friendly suit). The goal is to build the strongest pool of dice by drawing cards and interpreting them based on their relationship to your faction.</p>
+                <p>At the end of the game, all players roll their accumulated dice. The player(s) with the highest total wins!</p>
+                <p>The collection of dice & final rolling represents the in-universe collection of tokens, that are then used to determine the final outcome of the game by shaking a bag used to collect all player tokens (identifiable by their suit), and dumping them onto the table. Traditionally, any that roll off the table are units that fled from battle, face down tokens represent dead units, and face up units represent those that survived the battle. The player with the total number of face up units wins the game.</p>
+                <p>Some people prefer to play with no-deserter rules, where tokens are instead dumped into a tray or onto a table with a raised edge to prevent tokens falling to the floor.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesSetup">
+                <strong>Setup</strong>
+              </button>
+            </h2>
+            <div id="rulesSetup" class="accordion-collapse collapse" data-bs-parent="#kingdomRulesAccordion">
+              <div class="accordion-body">
+                <ul>
+                  <li>Remove the Kings & Jokers and Shuffle the deck.</li>
+                  <li>Shuffle the Kings. Each player draws a King that becomes the leader of their faction (❤️ Ratar, ♠️ The Stain, ♣️ Dominus, ♦️ Giltar).</li>
+                  <li>All players start with no dice.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesCardTypes">
+                <strong>Card Types & Effects</strong>
+              </button>
+            </h2>
+            <div id="rulesCardTypes" class="accordion-collapse collapse" data-bs-parent="#kingdomRulesAccordion">
+              <div class="accordion-body">
+                <p>When a player draws a card, its effect depends on two things:</p>
+                <ul>
+                  <li><strong>Suit relationship:</strong>
+                    <ul>
+                      <li><strong>Friendly 💚</strong>: Same suit as your faction</li>
+                      <li><strong>Enemy ❤️</strong>: Another player's faction suit</li>
+                      <li><strong>Neutral 💛</strong>: A suit not assigned to any player</li>
+                    </ul>
+                  </li>
+                </ul>
+
+                <table class="table table-dark table-striped table-hover mt-3 mb-0">
+                    <thead>
+                        <tr>
+                        <th scope="col" class="text-center">Card Type</th>
+                        <th scope="col" class="text-center">💚 Friendly</th>
+                        <th scope="col" class="text-center">❤️ Enemy</th>
+                        <th scope="col" class="text-center">💛 Neutral</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">Number (2-10)</th>
+                        <td class="text-center fw-bold text-success">+1 d12 🌟</td>
+                        <td class="text-center fw-bold text-danger">+1 d6 ⚔️</td>
+                        <td class="text-center fw-bold text-secondary">+1 d4 🛡️</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Jack (J)</th>
+                        <td class="text-center fw-bold text-success">+2 d20 🌟</td>
+                        <td class="text-center fw-bold text-danger">+1 d20 ⚔️</td>
+                        <td class="text-center fw-bold text-secondary">+1 d12 🛡️</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Ace (A)</th>
+                        <td class="text-center fw-bold text-success">+4 d12 🌟</td>
+                        <td class="text-center fw-bold text-danger">+2 d12 ⚔️</td>
+                        <td class="text-center fw-bold text-secondary">+1 d12 🛡️</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Queen (Q)</th>
+                        <td class="text-center fw-bold text-success">+4 d20 🌟</td>
+                        <td class="text-center fw-bold text-danger">+3 d20 ⚔️</td>
+                        <td class="text-center fw-bold text-secondary">+2 d20 🛡️</td>
+                        </tr>
+                    </tbody>
+                    </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesGameplay">
+                <strong>Gameplay</strong>
+              </button>
+            </h2>
+            <div id="rulesGameplay" class="accordion-collapse collapse" data-bs-parent="#kingdomRulesAccordion">
+              <div class="accordion-body">
+                <ul>
+                  <li>Each round, every player draws one card from the top of the deck and gains dice based on the card's effect.</li>
+                  <li>The game continues for as many <strong>full rounds</strong> as possible so that <strong>every player draws the exact same number of cards</strong>.</li>
+                  <li>Any leftover cards (when the deck can't be evenly divided) remain undrawn.</li>
+                  <li>When no more full rounds are possible, proceed to the final roll.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesEnd">
+                <strong>Final Roll & Winning</strong>
+              </button>
+            </h2>
+            <div id="rulesEnd" class="accordion-collapse collapse" data-bs-parent="#kingdomRulesAccordion">
+              <div class="accordion-body">
+                <ul>
+                  <li>All players simultaneously roll all their accumulated dice.</li>
+                  <li>Add up the totals (d4 max 4, d6 max 6, d12 max 12, d20 max 20).</li>
+                  <li>The player(s) with the highest total score win(s).</li>
+                  <li>Ties are allowed. Multiple winners are declared if tied for highest.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
