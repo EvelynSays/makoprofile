@@ -473,21 +473,21 @@ if (entryForm) {
     fetchKnowledge();
 }
 
-const suits = ['ratar', 'stain', 'dominus', 'giltar'];
+const suits = ['zelimphor', 'karhagmidar', 'paran', 'isles'];
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'A'];
 const suitEmojis = { 
-  ratar: '❤️', 
-  stain: '♠️', 
-  dominus: '♣️', 
-  giltar: '♦️' 
+  zelimphor: '❤️', 
+  karhagmidar: '♠️', 
+  paran: '♣️', 
+  isles: '♦️' 
 };
 
 function getSuitDisplayName(suit) {
   const displayNames = {
-    ratar: 'Ratar',
-    stain: 'The Stain',
-    dominus: 'Dominus',
-    giltar: 'Giltar'
+    zelimphor: 'Zelimphor',
+    karhagmidar: 'Karhagmidar',
+    paran: 'Paran',
+    isles: 'The Shattered Isles'
   };
   return displayNames[suit];
 }
